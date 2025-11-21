@@ -9,6 +9,7 @@ services:
       - gradle-cache:/root/.gradle
     environment:
       SPRING_DEVTOOLS_RESTART_ENABLED: true
+      TZ: Asia/Tokyo
     # --continuous オプションで変更検知＆再起動させる
     command: ./gradlew bootRun --continuous
     depends_on:

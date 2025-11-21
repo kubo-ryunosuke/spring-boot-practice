@@ -1,6 +1,10 @@
 # JDK 21 (Alpine Linux版)
 FROM eclipse-temurin:21-jdk-alpine
 
+# タイムゾーンデータをインストールし、日本時間に設定する
+RUN apk add --no-cache tzdata
+ENV TZ=Asia/Tokyo
+
 WORKDIR /app
 
 # Gradleのキャッシュを効かせるために設定ファイルを先にコピー
