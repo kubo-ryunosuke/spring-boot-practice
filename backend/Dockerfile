@@ -1,4 +1,3 @@
-# JDK 21 (Alpine Linux版)
 FROM eclipse-temurin:21-jdk-alpine
 
 # タイムゾーンデータをインストールし、日本時間に設定する

@@ -36,3 +36,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// ファイル変更を高速に検知するための設定
+tasks.withType(JavaCompile) {
+    options.incremental = true
+}
