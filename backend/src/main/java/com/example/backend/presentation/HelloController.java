@@ -1,4 +1,4 @@
-package com.example.backend;
+package com.example.backend.presentation;
 
 import org.springframework.web.bind.annotation.RestController;
 
