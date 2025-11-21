@@ -1,47 +1,31 @@
 # Codex 作業指示書
 
-## 目的
-
-- `compose.yaml` を基点にした Spring Boot + PostgreSQL 練習プロジェクト。Codex 作業時の前提を簡潔に共有。
+## プロジェクト概要
+Docker Compose ベースの Spring Boot + PostgreSQL 練習プロジェクト。
 
 ## 技術スタック
+- **Backend**: Spring Boot 4.0.0 (Java 21)
+  - Starters: Web, Data JPA, Lombok, Devtools
+  - DDL auto: `update`
+- **Database**: PostgreSQL 17
+  - Host: `db` (Port: 5432, DB: `mydb`)
+  - Creds: user=`user`, pass=`password`
+- **Root Package**: `com.example.backend`
 
-- Backend
-  - Spring Boot 4.0.0 (Java 21, Gradle)
-  - スターターは WebMVC / Data JPA、Lombok、Devtools。
-  - JPA 自動 DDL は `update`。
-- Database
-  - PostgreSQL 17 (Docker official `postgres:17-alpine`)。
-  - 接続は `jdbc:postgresql://db:5432/mydb`
-    - user: `user`
-    - password: `password`。
-- 実行基盤
-  - Docker Compose
-    - `backend` ビルド & ホットリロード用 `./gradlew -t classes` と `bootRun` を併走
-    - DB 初期化は `database/init` をマウント。
-- フロントエンド
-  - `compose.yaml` に React 用サービスの雛形あり（コメントアウト）。
-  - 現在コード未配置（`frontend` 空）。
+## アーキテクチャ設計方針 (Onion Arch + Light DDD)
+1. **レイヤー構成**:
+   - `presentation`: Web/API層。入出力DTOはここに配置し、Domainエンティティを外部に返さない。
+   - `application`: ユースケース層。
+   - `domain`: ドメインモデル層。他レイヤーに依存しない。
+   - `infrastructure`: 実装層（Repository実装、外部API接続など）。
+2. **依存方向**: 外側 → 内側（Domain）のみ許可。
+3. **ドメインモデル配置**:
+   - `domain` 直下にビジネス用語ベースで配置（例: `Employee`）。
+   - Repositoryの**インターフェース**は `domain`、**実装**は `infrastructure` に配置。
+   - サブパッケージ（例: `domain.employee`）は、同一集約でグルーピングが必須な場合のみ作成する。
 
-## バックエンド設計方針
-
-- オニオンアーキテクチャと軽量 DDD を採用する。
-- レイヤ構成は `presentation`（Web/API 層）、`application`（ユースケース層）、`domain`（ドメインモデル層）、`infrastructure`（DB・外部サービス実装層）を基本とする。
-- 依存方向は外側レイヤから内側レイヤのみ許可し、`domain` は他レイヤに依存しない。
-- Java パッケージは `com.example.backend.presentation`、`com.example.backend.application`、`com.example.backend.domain`、`com.example.backend.infrastructure` をベースに構成する。
-- ドメインモデルは `domain` 配下にビジネス用語ベースのクラス名で定義し（例: `com.example.backend.domain.Employee`）、リポジトリのインターフェースは `domain` 層、実装は `infrastructure` 層（例: Spring Data JPA）に配置する。
-- `domain` 配下のサブパッケージ（例: `com.example.backend.domain.employee`）は、同一コンテキスト/集約に属するエンティティや値オブジェクトが複数存在し、グルーピングの必要が生じた場合にのみ作成する。それ以外は `domain` 直下にエンティティを配置する。
-- API 入出力用 DTO は `presentation` 層に置き、`domain` のエンティティを直接外部に返さない。
-
-## 実行メモ
-
-- ローカル起動
-  - `docker compose up --build` で backend:8080 / db:5432。
-  - Gradle キャッシュはボリューム `gradle-cache`。
-- 直接起動
-  - `backend` 直下で `./gradlew bootRun`。
-  - DB は上記認証情報で接続。
-
-## 注意事項
-
-- 変更は最小差分を基本としつつ、負債固定化は避ける。
+## 整合性と変更のルール
+1. **変更の最小化**: 既存の設計を尊重し、不必要な大規模変更は避ける。
+2. **不整合の排除 (Clean-up)**:
+   - ライブラリ追加や構成変更を行う際は、**それにより不要・矛盾する既存の記述（依存関係、旧方針のテスト、設定）がないか必ず確認する。**
+   - 新方針と矛盾する古いコードや設定は「残す」のではなく、積極的に**削除・修正**し、プロジェクト全体を現在の方針に完全適合させる。
