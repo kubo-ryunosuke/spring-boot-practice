@@ -6,8 +6,7 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.domain.model.Employee;
-import com.example.backend.domain.repository.EmployeeRepository;
+import com.example.backend.application.EmployeeService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,11 +14,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmployeeController {
 
-    private final EmployeeRepository repository;
+    private final EmployeeService employeeApplicationService;
 
     @GetMapping("/employees")
-    public List<Employee> getAll() {
-        return repository.findAll();
+    public List<EmployeeResponse> getAll() {
+        return employeeApplicationService.getEmployees()
+                .stream()
+                .map(EmployeeResponse::from)
+                .toList();
     }
 
     @GetMapping("/employees/hello")
