@@ -34,11 +34,9 @@ public class EmployeeService {
     public List<AllowanceResult> getAllowanceResults(List<Employee> list, Integer deptId, LocalDate targetDate) {
         return list.stream()
                 .filter(e -> {
-                    if (deptId == null) {
-                        return true;
-                    }
-
-                    return e.getDepartmentId() != null && e.getDepartmentId().equals(deptId);
+                    return deptId == null
+                            || (e.getDepartmentId() != null
+                                    && e.getDepartmentId().equals(deptId));
                 })
                 .map(e -> {
                     long years = ChronoUnit.YEARS.between(e.getJoinDate(), targetDate);
