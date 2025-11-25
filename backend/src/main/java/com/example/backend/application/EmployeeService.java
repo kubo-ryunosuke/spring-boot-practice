@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final TaxService taxService;
 
     public record AllowanceResult(String name, long years, int totalAmount) {
     }
@@ -42,6 +43,10 @@ public class EmployeeService {
                     long years = ChronoUnit.YEARS.between(e.getJoinDate(), targetDate);
                     var baseAllowance = Optional.ofNullable(e.getBaseAllowance());
                     int amount = (int) years * ALLOWANCE_RATE_PER_YEAR + baseAllowance.orElse(0);
+
+                    int tax = taxService.calculateTax(amount);
+                    System.out.println(e.getName() + "さんの税金: " + tax + "円");
+
                     return new AllowanceResult(e.getName(), years, amount);
                 })
                 .toList();
