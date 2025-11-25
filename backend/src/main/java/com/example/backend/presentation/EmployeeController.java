@@ -14,6 +14,6 @@ public class EmployeeController {
 
     @GetMapping("/employees/hello-json")
     public Map<String, String> helloJson() {
-        return Map.of("message", "Hello Spring");
+        return Map.of("message", "Hello Spring JSON");
     }
 }
