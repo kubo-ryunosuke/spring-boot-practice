@@ -1,12 +1,15 @@
 package com.example.backend.presentation;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.application.EmployeeService;
+import com.example.backend.application.EmployeeService.AllowanceResult;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +25,12 @@ public class EmployeeController {
                 .stream()
                 .map(EmployeeResponse::from)
                 .toList();
+    }
+
+    @GetMapping("/employees/bonuses")
+    public List<AllowanceResult> getBonuses(@RequestParam(name = "dept", required = false) Integer deptId) {
+        var employees = employeeApplicationService.getEmployees();
+        return employeeApplicationService.getAllowanceResults(employees, deptId, LocalDate.now());
     }
 
     @GetMapping("/employees/hello")
