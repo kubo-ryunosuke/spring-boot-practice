@@ -30,6 +30,7 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
+    // todo: 実装キモめ、AIレビュー挟む
     public List<AllowanceResult> getAllowanceResults(List<Employee> list, Integer deptId, LocalDate targetDate) {
         return list.stream()
                 .filter(e -> {
