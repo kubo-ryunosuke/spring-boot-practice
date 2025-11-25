@@ -7,13 +7,15 @@ services:
     volumes:
       - ./backend:/app
       - gradle-cache:/root/.gradle
+      - /app/build
     environment:
       SPRING_DEVTOOLS_RESTART_ENABLED: true
       GRADLE_USER_HOME: /home/gradle/.gradle
       TZ: Asia/Tokyo
     command: > 
       /bin/sh -c "
-        ./gradlew -t classes &
+        ./gradlew classes &&
+        (./gradlew -t classes &) &&
         ./gradlew bootRun
       "
     depends_on:
