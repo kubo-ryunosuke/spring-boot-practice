@@ -38,9 +38,7 @@ public class EmployeeService {
                         return true;
                     }
 
-                    var departmentId = Optional.ofNullable(e.getDepartmentId());
-                    var targetDeptId = Optional.ofNullable(deptId);
-                    return departmentId.equals(targetDeptId);
+                    return e.getDepartmentId() != null && e.getDepartmentId().equals(deptId);
                 })
                 .map(e -> {
                     long years = ChronoUnit.YEARS.between(e.getJoinDate(), targetDate);
