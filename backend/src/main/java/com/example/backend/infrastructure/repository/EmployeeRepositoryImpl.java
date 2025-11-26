@@ -2,6 +2,8 @@ package com.example.backend.infrastructure.repository;
 
 import com.example.backend.domain.model.Employee;
 import com.example.backend.domain.repository.EmployeeRepository;
+import com.example.backend.infrastructure.translator.EmployeeTranslator;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,17 +18,22 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public Optional<Employee> findById(Integer id) {
-        return jpaRepository.findById(id);
+        return jpaRepository.findById(id)
+                .map(EmployeeTranslator::toDomain);
     }
 
     @Override
     public List<Employee> findAll() {
-        return jpaRepository.findAll();
+        return jpaRepository.findAll()
+            .stream()
+            .map(e -> EmployeeTranslator.toDomain(e))
+            .toList();
     }
 
     @Override
     public Employee save(Employee employee) {
-        return jpaRepository.save(employee);
+        // todo: どう扱うか検討
+        throw new UnsupportedOperationException("EmployeeRepository.save は未実装です");
     }
 
     @Override

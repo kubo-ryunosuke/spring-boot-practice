@@ -1,22 +1,29 @@
 package com.example.backend.domain.model;
 
-import lombok.Data;
-
 import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import lombok.Getter;
 
-@Entity
-@Data
+@Getter
 public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private LocalDate joinDate;
     private Integer departmentId;
     private Integer baseAllowance;
+
+    public Employee(String name, LocalDate joinDate, Integer departmentId, Integer baseAllowance) {
+        this.name = name;
+        this.joinDate = joinDate;
+        this.departmentId = departmentId;
+        this.baseAllowance = baseAllowance;
+    }
+
+    public Employee(Integer id, String name, LocalDate joinDate, Integer departmentId, Integer baseAllowance) {
+        this.id = id;
+        this.name = name;
+        this.joinDate = joinDate;
+        this.departmentId = departmentId;
+        this.baseAllowance = baseAllowance;
+    }
 }
